@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestDateDiffFromNow(t *testing.T) {
+func TestCalcDaysDiff(t *testing.T) {
 	d := time.Date(2024, 1, 20, 0, 0, 0, 0, time.UTC)
 	u := time.Date(2024, 1, 19, 0, 0, 0, 0, time.UTC)
 

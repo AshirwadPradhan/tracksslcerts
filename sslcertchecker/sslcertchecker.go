@@ -63,6 +63,8 @@ func (s *SSLCertInfo) Validate() {
 	} else if s.ExpiresIn < 0 {
 		s.Status = CertUnhealthy
 	}
+
+	s.Conn.Close()
 }
 
 func (s *SSLCertInfo) populateCertInfo() {
