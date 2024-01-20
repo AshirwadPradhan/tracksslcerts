@@ -138,7 +138,10 @@ func (us *SqliteUserStore) Read(username string) (*types.User, error) {
 
 	err = json.Unmarshal([]byte(trackedDomains), &user.TrackedDomains)
 	if err != nil {
+		tx.Rollback()
 		return nil, err
 	}
+
+	tx.Commit()
 	return &user, nil
 }
