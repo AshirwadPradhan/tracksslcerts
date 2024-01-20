@@ -35,6 +35,9 @@ type SSLCertInfo struct {
 	// AboutTime, if ExpiresIn is between 0 and warning days
 	// Invalid, if SSL certificate is invalid
 	Status CertStatus
+	
+	// Latest timestamp when Validate was called
+	LastChecked time.Time
 }
 
 func NewSSLCertInfo(domain string) *SSLCertInfo {
@@ -51,6 +54,7 @@ func (s *SSLCertInfo) WithWarnBefore(warnDaysBefore int64) *SSLCertInfo {
 }
 
 func (s *SSLCertInfo) Validate() {
+	s.LastChecked = time.Now()
 	if err := s.checkValidSSL(); err != nil {
 		s.Status = CertInvalid
 		return
