@@ -1,19 +1,16 @@
 package main
 
 import (
-	"fmt"
+	"net/http"
 
-	"github.com/AshirwadPradhan/tracksslcerts/types"
+	"github.com/AshirwadPradhan/tracksslcerts/handlers"
 )
 
 func main() {
 
-	domains := []string{"google.com", "ashiprad.com", "example.com"}
+	http.HandleFunc("/", handlers.HomeHandler)
+	http.HandleFunc("/userlogin", handlers.UserLoginHandler)
+	http.HandleFunc("/dashboard", handlers.DashboardHandler)
 
-	for _, domain := range domains {
-		sslInfo := types.NewSSLCertInfo(domain, "")
-		sslInfo.Validate()
-		fmt.Printf("Info: %+v\n", sslInfo)
-	}
-
+	http.ListenAndServe(":3000", nil)
 }

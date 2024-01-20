@@ -81,6 +81,8 @@ func (us *SqliteStore) ReadAllDomains(username string) (*[]types.SSLCertInfo, er
 }
 
 func (us *SqliteStore) UpdateAllDomains(username string) error {
+	// TODO: update only if lastUpdatedTime is greater than certain
+	// threshold
 
 	tx, err := us.db.Begin()
 	if err != nil {
@@ -96,9 +98,10 @@ func (us *SqliteStore) UpdateAllDomains(username string) error {
 	}
 	defer rows.Close()
 
+	var d string
+	var wb int64
+
 	for rows.Next() {
-		var d string
-		var wb int64
 		err = rows.Scan(&d, &wb)
 		if err != nil {
 			tx.Rollback()
@@ -124,6 +127,8 @@ func (us *SqliteStore) UpdateAllDomains(username string) error {
 }
 
 func (us *SqliteStore) CronUpdateDomains() error {
+	// TODO: update only if last_checked is above
+	// a certain threshold
 
 	tx, err := us.db.Begin()
 	if err != nil {
@@ -139,10 +144,11 @@ func (us *SqliteStore) CronUpdateDomains() error {
 	}
 	defer rows.Close()
 
+	var u string
+	var d string
+	var wb int64
+
 	for rows.Next() {
-		var u string
-		var d string
-		var wb int64
 		err = rows.Scan(&u, &d, &wb)
 		if err != nil {
 			tx.Rollback()

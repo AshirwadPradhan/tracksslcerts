@@ -1,8 +1,9 @@
 package types
 
 type User struct {
-	UserName       string
-	Email          string
+	UserName string
+	Email    string
+	// TODO: Add salt to the password
 	HashedPassword string
 	AccountType    string
 }
