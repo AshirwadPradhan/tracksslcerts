@@ -79,3 +79,90 @@ func (us *SqliteStore) ReadAllDomains(username string) (*[]types.SSLCertInfo, er
 	tx.Commit()
 	return &certInfo, nil
 }
+
+func (us *SqliteStore) UpdateAllDomains(username string) error {
+
+	tx, err := us.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	rows, err := tx.Query(`
+	SELECT domain, warn_before FROM domains WHERE username = ?
+	`, username)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var d string
+		var wb int64
+		err = rows.Scan(&d, &wb)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+
+		s := types.NewSSLCertInfo(d, username).WithWarnBefore(wb)
+		s.Validate()
+
+		_, err = tx.Exec(`
+		UPDATE domains SET 
+		server_type = ?, issuer = ?, expires_in = ?, status = ?, last_checked = ?  
+		WHERE username = ? AND domain = ?
+		`, s.ServerType, s.Issuer, s.ExpiresIn, s.Status, s.LastChecked, username, d)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	tx.Commit()
+	return nil
+}
+
+func (us *SqliteStore) CronUpdateDomains() error {
+
+	tx, err := us.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	rows, err := tx.Query(`
+	SELECT username, domain, warn_before FROM domains
+	`)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var u string
+		var d string
+		var wb int64
+		err = rows.Scan(&u, &d, &wb)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+
+		s := types.NewSSLCertInfo(d, u).WithWarnBefore(wb)
+		s.Validate()
+
+		_, err = tx.Exec(`
+		UPDATE domains SET 
+		server_type = ?, issuer = ?, expires_in = ?, status = ?, last_checked = ?  
+		WHERE username = ? AND domain = ?
+		`, s.ServerType, s.Issuer, s.ExpiresIn, s.Status, s.LastChecked, u, d)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	tx.Commit()
+	return nil
+}

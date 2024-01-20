@@ -67,6 +67,9 @@ func (s *SSLCertInfo) Validate() {
 	s.LastChecked = time.Now().Format(time.RFC3339)
 	if err := s.checkValidSSL(); err != nil {
 		s.Status = CertInvalid
+		s.ServerType = ""
+		s.Issuer = ""
+		s.ExpiresIn = 0
 		return
 	}
 
