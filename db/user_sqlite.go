@@ -68,23 +68,59 @@ func (us *SqliteUserStore) Create(user *types.User) error {
 	return nil
 }
 
-func (us *SqliteUserStore) Update(user *types.User) error {
+func (us *SqliteUserStore) UpdateUsername(username string, user types.User) error {
 	tx, err := us.db.Begin()
 	if err != nil {
 		return err
 	}
 
-	// Serialize tracked domains to JSON
-	trackedDomains, err := json.Marshal(user.TrackedDomains)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	_, err = tx.Exec(`
 	UPDATE users SET 
-	username = ?, email = ?, hashed_password = ?, account_type = ?, tracked_domains = ? 
-	WHERE username = ?
-	`, user.UserName, user.Email, user.HashedPassword, user.AccountType, string(trackedDomains), user.UserName)
+	username = ? WHERE username = ?
+	`, username, user.UserName)
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	tx.Commit()
+	return nil
+}
+
+func (us *SqliteUserStore) UpdatePassword(password string, user types.User) error {
+	tx, err := us.db.Begin()
+	if err != nil {
+		return err
+	}
+
+
+	_, err = tx.Exec(`
+	UPDATE users SET 
+	hashed_password = ? WHERE username = ?
+	`, password, user.UserName)
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	tx.Commit()
+	return nil
+}
+
+func (us *SqliteUserStore) UpdateAccountType(accountType string, user types.User) error {
+	tx, err := us.db.Begin()
+	if err != nil {
+		return err
+	}
+
+
+	_, err = tx.Exec(`
+	UPDATE users SET 
+	account_type = ? WHERE username = ?
+	`, accountType, user.UserName)
 
 	if err != nil {
 		tx.Rollback()
