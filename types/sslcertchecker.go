@@ -1,8 +1,10 @@
-package sslcertchecker
+package types
 
 import (
 	"crypto/tls"
 	"time"
+
+	"github.com/AshirwadPradhan/tracksslcerts/helpers"
 )
 
 type CertStatus int
@@ -71,7 +73,7 @@ func (s *SSLCertInfo) populateCertInfo() {
 	cs := s.Conn.ConnectionState()
 	s.Issuer = cs.PeerCertificates[0].Issuer.String()
 	s.ServerType = cs.ServerName
-	s.ExpiresIn = calcDaysDiff(cs.PeerCertificates[0].NotAfter, time.Now())
+	s.ExpiresIn = helpers.CalcDaysDiff(cs.PeerCertificates[0].NotAfter, time.Now())
 }
 
 func (s *SSLCertInfo) checkValidSSL() error {

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/AshirwadPradhan/tracksslcerts/sslcertchecker"
+	"github.com/AshirwadPradhan/tracksslcerts/types"
 )
 
 func main() {
@@ -11,7 +11,7 @@ func main() {
 	domains := []string{"google.com", "ashiprad.com", "example.com"}
 
 	for _, domain := range domains {
-		sslInfo := sslcertchecker.NewSSLCertInfo(domain)
+		sslInfo := types.NewSSLCertInfo(domain)
 		sslInfo.Validate()
 		fmt.Printf("Info: %+v\n", sslInfo)
 	}
