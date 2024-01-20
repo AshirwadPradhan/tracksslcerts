@@ -17,9 +17,17 @@ const (
 )
 
 type SSLCertInfo struct {
+	// user who is tracking
+	UserName string
+
+	// domain to be tracked
 	Domain     string
 	conn       *tls.Conn
+
+	// server type of the ssl certificate
 	ServerType string
+
+	// issuer of ssl certificate
 	Issuer     string
 
 	// calculates how much time after the certificate will expire
@@ -37,11 +45,13 @@ type SSLCertInfo struct {
 	Status CertStatus
 
 	// Latest timestamp when Validate was called
-	LastChecked time.Time
+	// stores in ISO Format
+	LastChecked string
 }
 
-func NewSSLCertInfo(domain string) *SSLCertInfo {
+func NewSSLCertInfo(domain string, username string) *SSLCertInfo {
 	return &SSLCertInfo{
+		UserName: username,
 		Domain:     domain,
 		WarnBefore: 15,
 	}
@@ -54,7 +64,7 @@ func (s *SSLCertInfo) WithWarnBefore(warnDaysBefore int64) *SSLCertInfo {
 }
 
 func (s *SSLCertInfo) Validate() {
-	s.LastChecked = time.Now()
+	s.LastChecked = time.Now().Format(time.RFC3339)
 	if err := s.checkValidSSL(); err != nil {
 		s.Status = CertInvalid
 		return
