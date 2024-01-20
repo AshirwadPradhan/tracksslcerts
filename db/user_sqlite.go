@@ -2,18 +2,17 @@ package db
 
 import "github.com/AshirwadPradhan/tracksslcerts/types"
 
-
-
 func (us *SqliteStore) CreateUser(user *types.User) error {
 	tx, err := us.db.Begin()
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec(`INSERT INTO users 
+	_, err = tx.Exec(`
+	INSERT INTO users 
 	(username, email, hashed_password, account_type)
-	VALUES (?, ?, ?, ?, ?)`,
-		user.UserName, user.Email, user.HashedPassword, user.AccountType)
+	VALUES (?, ?, ?, ?, ?)
+	`, user.UserName, user.Email, user.HashedPassword, user.AccountType)
 
 	if err != nil {
 		tx.Rollback()
@@ -111,7 +110,11 @@ func (us *SqliteStore) ValidatePassword(password string, user *types.User) bool 
 	if err != nil {
 		return false
 	}
-	rows, err := tx.Query("select hashed_password from users where username = ?", user.UserName)
+
+	rows, err := tx.Query(`
+	SELECT hashed_password FROM users WHERE username = ?
+	`, user.UserName)
+
 	if err != nil {
 		tx.Rollback()
 		return false
@@ -125,11 +128,7 @@ func (us *SqliteStore) ValidatePassword(password string, user *types.User) bool 
 	}
 
 	tx.Commit()
-	if hashedPassword != password {
-		return false
-	}
-
-	return true
+	return hashedPassword == password
 }
 
 func (us *SqliteStore) ReadUser(username string) (*types.User, error) {
@@ -139,7 +138,12 @@ func (us *SqliteStore) ReadUser(username string) (*types.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	rows, err := tx.Query("select username, email, account_type from users where username = ?", username)
+
+	rows, err := tx.Query(`
+	SELECT username, email, account_type 
+	FROM users WHERE username = ?
+	`, username)
+
 	if err != nil {
 		tx.Rollback()
 		return nil, err

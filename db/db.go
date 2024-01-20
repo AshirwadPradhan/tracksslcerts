@@ -19,4 +19,10 @@ type DomainStorer interface {
 	AddDomainsToTrack([]types.SSLCertInfo) error
 	ReadAllDomains(string) ([]types.SSLCertInfo, error)
 	DeleteDomains([]types.SSLCertInfo) error
+	DomainUpdater
+}
+
+type DomainUpdater interface {
+	UpdateAllDomains(username string) error
+	CronUpdateDomains() error
 }

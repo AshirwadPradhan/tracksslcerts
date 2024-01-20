@@ -21,14 +21,14 @@ type SSLCertInfo struct {
 	UserName string
 
 	// domain to be tracked
-	Domain     string
-	conn       *tls.Conn
+	Domain string
+	conn   *tls.Conn
 
 	// server type of the ssl certificate
 	ServerType string
 
 	// issuer of ssl certificate
-	Issuer     string
+	Issuer string
 
 	// calculates how much time after the certificate will expire
 	// stores in days
@@ -51,7 +51,7 @@ type SSLCertInfo struct {
 
 func NewSSLCertInfo(domain string, username string) *SSLCertInfo {
 	return &SSLCertInfo{
-		UserName: username,
+		UserName:   username,
 		Domain:     domain,
 		WarnBefore: 15,
 	}
