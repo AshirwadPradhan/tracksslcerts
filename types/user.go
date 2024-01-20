@@ -1,19 +1,18 @@
 package types
 
-
 type User struct {
-	UserName string
-	Email string
-	Password string
-	AccountType string
+	UserName       string
+	Email          string
+	HashedPassword string
+	AccountType    string
 	TrackedDomains []SSLCertInfo
 }
 
 func NewUser(userName string, email string, password string) *User {
 	return &User{
-		UserName: userName,
-		Email: email,
-		Password: password,
+		UserName:       userName,
+		Email:          email,
+		HashedPassword: password,
 	}
 }
 
@@ -26,7 +25,7 @@ func (u *User) AddDomainToTrack(domain string) {
 func (u *User) RemoveTrackedDomain(domain string) {
 	idx := 0
 	for i, d := range u.TrackedDomains {
-		if d.Domain == domain{
+		if d.Domain == domain {
 			idx = i
 			break
 		}

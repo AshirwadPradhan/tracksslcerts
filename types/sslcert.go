@@ -18,7 +18,7 @@ const (
 
 type SSLCertInfo struct {
 	Domain     string
-	Conn       *tls.Conn
+	conn       *tls.Conn
 	ServerType string
 	Issuer     string
 
@@ -35,7 +35,7 @@ type SSLCertInfo struct {
 	// AboutTime, if ExpiresIn is between 0 and warning days
 	// Invalid, if SSL certificate is invalid
 	Status CertStatus
-	
+
 	// Latest timestamp when Validate was called
 	LastChecked time.Time
 }
@@ -70,11 +70,11 @@ func (s *SSLCertInfo) Validate() {
 		s.Status = CertUnhealthy
 	}
 
-	s.Conn.Close()
+	s.conn.Close()
 }
 
 func (s *SSLCertInfo) populateCertInfo() {
-	cs := s.Conn.ConnectionState()
+	cs := s.conn.ConnectionState()
 	s.Issuer = cs.PeerCertificates[0].Issuer.String()
 	s.ServerType = cs.ServerName
 	s.ExpiresIn = helpers.CalcDaysDiff(cs.PeerCertificates[0].NotAfter, time.Now())
@@ -82,12 +82,12 @@ func (s *SSLCertInfo) populateCertInfo() {
 
 func (s *SSLCertInfo) checkValidSSL() error {
 	var err error
-	s.Conn, err = tls.Dial("tcp", s.Domain+":443", nil)
+	s.conn, err = tls.Dial("tcp", s.Domain+":443", nil)
 	if err != nil {
 		return err
 	}
 
-	if err = s.Conn.VerifyHostname(s.Domain); err != nil {
+	if err = s.conn.VerifyHostname(s.Domain); err != nil {
 		return err
 	}
 	return nil
