@@ -1,20 +1,11 @@
 package handlers
 
 import (
-	"html/template"
-	"log"
 	"net/http"
-	"path/filepath"
+
+	"github.com/labstack/echo/v4"
 )
 
-func DashboardHandler(w http.ResponseWriter, r *http.Request) {
-	lp := filepath.Join("templates", "layout.html")
-	fp := filepath.Join("templates", "dashboard.html")
-
-	tmpl, err := template.ParseFiles(lp, fp)
-	if err != nil {
-		log.Print(err.Error())
-		http.Error(w, http.StatusText(500), 500)
-	}
-	tmpl.ExecuteTemplate(w, "layout", nil)
+func DashboardHandler(c echo.Context) error {
+	return c.Render(http.StatusOK, "dashboard.html", nil)
 }
