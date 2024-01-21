@@ -17,8 +17,9 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.HandleFunc("/", handlers.HomeHandler)
-	http.HandleFunc("/userlogin", handlers.UserLoginHandler)
+	http.HandleFunc("/user-login", handlers.UserLoginHandler)
 	http.HandleFunc("/dashboard", handlers.DashboardHandler)
+	http.HandleFunc("/create-account", handlers.CreateAccountHandler)
 
 	http.ListenAndServe(":3000", nil)
 }
