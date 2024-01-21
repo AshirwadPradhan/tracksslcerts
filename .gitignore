@@ -1,4 +1,4 @@
 .vscode
 bin
 node_modules
-sslchecker.db
+sslchecker.db*

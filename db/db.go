@@ -5,16 +5,16 @@ import "github.com/AshirwadPradhan/tracksslcerts/types"
 // TODO: check if pointers can be used to pass all around
 
 type UserStorer interface {
-	CreateUser(types.User) error
-	ReadUser(string) (types.User, error)
-	DeleteUser(types.User) error
+	CreateUser(*types.User) error
+	ReadUser(string) (*types.User, error)
+	DeleteUser(*types.User) error
 	UserUpdater
 }
 
 type UserUpdater interface {
-	UpdateUserUsername(string) error
-	UpdateUserPassword(string) error
-	UpdateUserAccountType(string) error
+	UpdateUserUsername(string, *types.User) error
+	UpdateUserPassword(string, *types.User) error
+	UpdateUserAccountType(string, *types.User) error
 }
 
 type DomainStorer interface {

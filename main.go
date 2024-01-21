@@ -50,6 +50,7 @@ func main() {
 	e.GET("/dashboard", handlers.DashboardHandler)
 	e.GET("/user-login", handlers.UserLoginHandler)
 	e.GET("/create-account", handlers.CreateAccountHandler)
+	e.POST("/register-user", handlers.RegisterUserHandler(s))
 
 	e.Logger.Fatal(e.Start(":3000"))
 }

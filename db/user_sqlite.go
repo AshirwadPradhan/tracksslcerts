@@ -11,7 +11,7 @@ func (us *SqliteStore) CreateUser(user *types.User) error {
 	_, err = tx.Exec(`
 	INSERT INTO users 
 	(username, email, hashed_password, account_type)
-	VALUES (?, ?, ?, ?, ?)
+	VALUES (?, ?, ?, ?)
 	`, user.UserName, user.Email, user.HashedPassword, user.AccountType)
 
 	if err != nil {
@@ -23,7 +23,7 @@ func (us *SqliteStore) CreateUser(user *types.User) error {
 	return nil
 }
 
-func (us *SqliteStore) UpdateUserUsername(username string, user types.User) error {
+func (us *SqliteStore) UpdateUserUsername(username string, user *types.User) error {
 	tx, err := us.db.Begin()
 	if err != nil {
 		return err
@@ -43,7 +43,7 @@ func (us *SqliteStore) UpdateUserUsername(username string, user types.User) erro
 	return nil
 }
 
-func (us *SqliteStore) UpdateUserPassword(password string, user types.User) error {
+func (us *SqliteStore) UpdateUserPassword(password string, user *types.User) error {
 	tx, err := us.db.Begin()
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func (us *SqliteStore) UpdateUserPassword(password string, user types.User) erro
 	return nil
 }
 
-func (us *SqliteStore) UpdateUserAccountType(accountType string, user types.User) error {
+func (us *SqliteStore) UpdateUserAccountType(accountType string, user *types.User) error {
 	tx, err := us.db.Begin()
 	if err != nil {
 		return err
@@ -150,10 +150,12 @@ func (us *SqliteStore) ReadUser(username string) (*types.User, error) {
 	}
 	defer rows.Close()
 
-	err = rows.Scan(&user.UserName, &user.Email, &user.AccountType)
-	if err != nil {
-		tx.Rollback()
-		return nil, err
+	for rows.Next() {
+		err = rows.Scan(&user.UserName, &user.Email, &user.AccountType)
+		if err != nil {
+			tx.Rollback()
+			return nil, err
+		}
 	}
 
 	tx.Commit()

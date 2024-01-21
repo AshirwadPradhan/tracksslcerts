@@ -13,5 +13,6 @@ func NewUser(userName string, email string, password string) *User {
 		UserName:       userName,
 		Email:          email,
 		HashedPassword: password,
+		AccountType:    "Free",
 	}
 }
