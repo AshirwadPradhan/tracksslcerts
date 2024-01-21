@@ -1,11 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login</title>
-</head>
-<body>
-    <h1>This is the user login page</h1>
+{{ define "title" }}
+Login Form
+{{ end }}
+
+{{ define "body" }}
+<body class="bg-gray-900 text-white">
+
+    <div class="flex justify-center items-center h-screen">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-96">
+            <h1 class="text-2xl font-semibold mb-6">Login</h1>
+
+            <form>
+                <div class="mb-4">
+                    <label for="username" class="block text-sm font-medium">Username</label>
+                    <input type="text" id="username" name="username" class="mt-1 p-2 w-full bg-gray-700 border-none rounded">
+                </div>
+
+                <div class="mb-4">
+                    <label for="password" class="block text-sm font-medium">Password</label>
+                    <input type="password" id="password" name="password" class="mt-1 p-2 w-full bg-gray-700 border-none rounded">
+                </div>
+
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded focus:outline-none focus:shadow-outline-blue">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
 </body>
-</html>
+{{ end }}

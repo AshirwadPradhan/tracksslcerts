@@ -4,12 +4,17 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"path/filepath"
 )
 
 func UserLoginHandler(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseFiles("./templates/user_login.html")
+	lp := filepath.Join("templates", "layout.html")
+	fp := filepath.Join("templates", "user_login.html")
+
+	tmpl, err := template.ParseFiles(lp, fp)
 	if err != nil {
-		log.Fatal(err)
+		log.Print(err.Error())
+		http.Error(w, http.StatusText(500), 500)
 	}
-	tmpl.Execute(w, nil)
+	tmpl.ExecuteTemplate(w, "layout", nil)
 }
