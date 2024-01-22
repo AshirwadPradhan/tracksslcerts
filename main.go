@@ -5,9 +5,13 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"log"
 
+	"github.com/AshirwadPradhan/tracksslcerts/auth"
 	"github.com/AshirwadPradhan/tracksslcerts/db"
 	"github.com/AshirwadPradhan/tracksslcerts/handlers"
+	"github.com/joho/godotenv"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -26,6 +30,11 @@ func (t *TemplateRegistry) Render(w io.Writer, name string, data interface{}, c 
 }
 
 func main() {
+
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("unable to load environment file")
+	}
 
 	s := db.NewSqliteUserStore()
 	fmt.Println(s)
@@ -46,10 +55,19 @@ func main() {
 		templates: templates,
 	}
 
+	restrictedGroup := e.Group("/user")
+
+	restrictedGroup.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey:   []byte(auth.GetJWTSecret()),
+		TokenLookup:  "cookie:ssl-cert-at",
+		ErrorHandler: auth.JWTErrorChecker,
+	}))
+
 	e.GET("/", handlers.HomeHandler)
-	e.GET("/dashboard", handlers.DashboardHandler)
-	e.GET("/user-login", handlers.UserLoginHandler)
-	e.GET("/create-account", handlers.CreateAccountHandler)
+	restrictedGroup.GET("/dashboard", handlers.DashboardHandler(s))
+	e.GET("/user-login", handlers.UserLoginHandler).Name = "userLoginForm"
+	e.POST("/user-login", handlers.UserSignIn(s))
+	e.GET("/register-user", handlers.CreateAccountHandler)
 	e.POST("/register-user", handlers.RegisterUserHandler(s))
 
 	e.Logger.Fatal(e.Start(":3000"))

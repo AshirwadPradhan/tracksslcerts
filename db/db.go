@@ -19,7 +19,7 @@ type UserUpdater interface {
 
 type DomainStorer interface {
 	AddDomainsToTrack([]types.SSLCertInfo) error
-	ReadAllDomains(string) ([]types.SSLCertInfo, error)
+	ReadAllDomains(string) (*[]types.SSLCertInfo, error)
 	DeleteDomains([]types.SSLCertInfo) error
 	DomainUpdater
 }

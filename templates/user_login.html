@@ -9,7 +9,11 @@ Login Form
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-96">
             <h1 class="text-2xl font-semibold mb-6">Login</h1>
 
-            <form method="post" action="/login-user">
+            <div hx-ext="response-targets">
+                <div id="form-message"></div>
+            </div>
+
+            <form method="post" hx-post="/user-login" hx-target="#form-message" hx-target-4xx="#form-message" hx-swap="outerHtml">
                 <div class="mb-4">
                     <label for="username" class="block text-sm font-medium">Username</label>
                     <input type="text" id="username" name="username" class="mt-1 p-2 w-full bg-gray-700 border-none rounded">
@@ -25,7 +29,7 @@ Login Form
                 </button>
             </form>
             <div class="mt-4 text-sm">
-                <p>Don't have an account? <a href="/create-account" class="text-blue-500 hover:underline">Create an account</a></p>
+                <p>Don't have an account? <a href="/register-user" class="text-blue-500 hover:underline">Create an account</a></p>
             </div>
         </div>
     </div>
