@@ -7,5 +7,5 @@ import (
 )
 
 func CreateAccountHandler(c echo.Context) error {
-	return c.Render(http.StatusOK, "create_account.html", nil)
+	return c.Render(http.StatusOK, "create_account", nil)
 }

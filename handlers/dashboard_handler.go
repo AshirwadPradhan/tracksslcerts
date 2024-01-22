@@ -7,5 +7,5 @@ import (
 )
 
 func DashboardHandler(c echo.Context) error {
-	return c.Render(http.StatusOK, "dashboard.html", nil)
+	return c.Render(http.StatusOK, "dashboard", nil)
 }

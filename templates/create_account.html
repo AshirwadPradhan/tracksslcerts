@@ -10,7 +10,7 @@ Login Form
             <h1 class="text-2xl font-semibold mb-6">Create an Account</h1>
             
             <div hx-ext="response-targets">
-                <div id="form-message" class="text-red-500 text-sm mb-4" ></div>
+                <div id="form-message"></div>
             </div>
 
             <form method="post" action="/register-user" hx-post="/register-user" hx-target="#form-message" hx-target-4xx="#form-message" hx-swap="outerHtml">

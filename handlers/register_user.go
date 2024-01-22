@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/AshirwadPradhan/tracksslcerts/db"
@@ -17,19 +18,19 @@ func RegisterUserHandler(db db.UserStorer) echo.HandlerFunc {
 		if len(username) < 8 {
 			c.Logger().Error("username length not satisfied")
 			return c.String(http.StatusBadRequest,
-				"<div id='form-message' class='text-red-500 text-sm mb-4'>Username not valid. It should be atleast 8 characters</div>")
+				createAccountHTMXResponse("error", "Username should be atleast 8 charcters"))
 		}
 
 		u, err := db.ReadUser(username)
 		if err != nil {
 			c.Logger().Error("error in reading user ", err)
 			return c.String(http.StatusBadRequest,
-				"<div id='form-message' class='text-red-500 text-sm mb-4'>Error in creating user</div>")
+				createAccountHTMXResponse("error", "Error in creating user"))
 		}
 		if u.UserName == username {
 			c.Logger().Error(" username already exists")
 			return c.String(http.StatusBadRequest,
-				"<div id='form-message' class='text-red-500 text-sm mb-4'>Username already exists</div>")
+				createAccountHTMXResponse("error", "Username already exists"))
 		}
 		// TODO: hash the password and store
 
@@ -38,8 +39,17 @@ func RegisterUserHandler(db db.UserStorer) echo.HandlerFunc {
 		if err != nil {
 			c.Logger().Error("error in creating user ", err)
 			return c.String(http.StatusBadRequest,
-				"<div id='form-message' class='text-red-500 text-sm mb-4'>Error in creating user</div>")
+				createAccountHTMXResponse("error", "Error in creating user"))
 		}
-		return c.String(http.StatusOK, "<div id='form-message' class='text-green-500 text-sm mb-4'>Account Created Successfully</div>")
+
+		return c.String(http.StatusOK, createAccountHTMXResponse("ok", "Account created successfully"))
+	}
+}
+
+func createAccountHTMXResponse(kind string, message string) string {
+	if kind == "ok" {
+		return fmt.Sprintf("<div id='form-message' class='text-green-500 text-sm mb-4'>%s</div>", message)
+	} else {
+		return fmt.Sprintf("<div id='form-message' class='text-red-500 text-sm mb-4'>%s</div>", message)
 	}
 }

@@ -37,10 +37,10 @@ func main() {
 	e.Use(middleware.Recover())
 
 	templates := map[string]*template.Template{}
-	templates["home.html"] = template.Must(template.ParseFiles("./templates/home.html", "./templates/base.html"))
-	templates["create_account.html"] = template.Must(template.ParseFiles("./templates/base.html", "./templates/create_account.html"))
-	templates["dashboard.html"] = template.Must(template.ParseFiles("./templates/base.html", "./templates/dashboard.html"))
-	templates["user_login.html"] = template.Must(template.ParseFiles("./templates/base.html", "./templates/user_login.html"))
+	templates["home"] = template.Must(template.ParseFiles("./templates/home.html", "./templates/base.html"))
+	templates["create_account"] = template.Must(template.ParseFiles("./templates/base.html", "./templates/create_account.html"))
+	templates["dashboard"] = template.Must(template.ParseFiles("./templates/base.html", "./templates/dashboard.html"))
+	templates["user_login"] = template.Must(template.ParseFiles("./templates/base.html", "./templates/user_login.html"))
 
 	e.Renderer = &TemplateRegistry{
 		templates: templates,

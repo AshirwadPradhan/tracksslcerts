@@ -7,5 +7,5 @@ import (
 )
 
 func UserLoginHandler(c echo.Context) error {
-	return c.Render(http.StatusOK, "user_login.html", nil)
+	return c.Render(http.StatusOK, "user_login", nil)
 }
