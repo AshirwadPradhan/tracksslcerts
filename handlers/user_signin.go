@@ -40,8 +40,9 @@ func UserSignIn(db db.UserStorer) echo.HandlerFunc {
 				helpers.FormMessageHTMXResponse("error", "Login Failed"))
 		}
 
-		// FIXME: This redirection does not work. Injects dashboard into HTMX
-		return c.Redirect(http.StatusMovedPermanently, "/user/dashboard")
+		c.Response().Header().Set("HX-Redirect", "/dashboard")
+		c.Response().Header().Set("HX-Location", "/dashboard")
+		return c.Redirect(http.StatusOK, "/dashboard")
 	}
 }
 

@@ -26,6 +26,7 @@ func (t *TemplateRegistry) Render(w io.Writer, name string, data interface{}, c 
 		return errors.New("template not found " + name)
 	}
 	// name of the base template in base.html
+	fmt.Printf("%+v", data)
 	return tmpl.ExecuteTemplate(w, "base", data)
 }
 
@@ -55,8 +56,9 @@ func main() {
 		templates: templates,
 	}
 
-	restrictedGroup := e.Group("/user")
+	restrictedGroup := e.Group("")
 
+	// TODO: verif token invalidation/expiry
 	restrictedGroup.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey:   []byte(auth.GetJWTSecret()),
 		TokenLookup:  "cookie:ssl-cert-at",
@@ -64,7 +66,7 @@ func main() {
 	}))
 
 	e.GET("/", handlers.HomeHandler)
-	restrictedGroup.GET("/dashboard", handlers.DashboardHandler(s))
+	restrictedGroup.GET("/dashboard", handlers.DashboardHandler(s)).Name = "dashboard"
 	e.GET("/user-login", handlers.UserLoginHandler).Name = "userLoginForm"
 	e.POST("/user-login", handlers.UserSignIn(s))
 	e.GET("/register-user", handlers.CreateAccountHandler)
