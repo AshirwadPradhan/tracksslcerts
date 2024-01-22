@@ -8,11 +8,11 @@ type User struct {
 	AccountType    string
 }
 
-func NewUser(userName string, email string, password string) *User {
+func NewUser(userName string, email string, hpass string) *User {
 	return &User{
 		UserName:       userName,
 		Email:          email,
-		HashedPassword: password,
+		HashedPassword: hpass,
 		AccountType:    "Free",
 	}
 }
