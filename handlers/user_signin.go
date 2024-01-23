@@ -12,32 +12,27 @@ import (
 
 func UserSignIn(db db.UserStorer) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// TODO: user sign in logic
 		username := c.FormValue("username")
 		password := c.FormValue("password")
 
 		user, err := db.ReadUser(username)
 		if err != nil {
 			c.Logger().Error("cannot read user ", err)
-			return c.String(http.StatusNotFound,
-				helpers.FormMessageHTMXResponse("error", "Login Failed"))
+			return errOnValidation(c)
 		}
 		if len(user.UserName) <= 0 {
 			c.Logger().Error("username not found")
-			return c.String(http.StatusNotFound,
-				helpers.FormMessageHTMXResponse("error", "Login Failed"))
+			return errOnValidation(c)
 		}
 
 		if checkpassword(password, user.HashedPassword) {
 			c.Logger().Error("password does not match")
-			return c.String(http.StatusBadRequest,
-				helpers.FormMessageHTMXResponse("error", "Login Failed"))
+			return errOnValidation(c)
 		}
 
 		if err = auth.GenerateTokenAndSetCookie(user, c); err != nil {
 			c.Logger().Error("token is invalid")
-			return c.String(http.StatusBadRequest,
-				helpers.FormMessageHTMXResponse("error", "Login Failed"))
+			return errOnValidation(c)
 		}
 
 		// We need to redirect here to /dashboard on successful verification
@@ -51,6 +46,11 @@ func UserSignIn(db db.UserStorer) echo.HandlerFunc {
 		c.Response().Header().Set("HX-Location", "/dashboard")
 		return c.NoContent(http.StatusOK)
 	}
+}
+
+func errOnValidation(c echo.Context) error {
+	return c.String(http.StatusBadRequest,
+		helpers.FormMessageHTMXResponse("error", "Username or Password incorrect"))
 }
 
 func checkpassword(password, hash string) bool {

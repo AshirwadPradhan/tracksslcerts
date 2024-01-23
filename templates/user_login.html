@@ -16,12 +16,12 @@ Login Form
             <form method="post" hx-post="/user-login" hx-target="#form-message" hx-target-4xx="#form-message" hx-swap="outerHtml">
                 <div class="mb-4">
                     <label for="username" class="block text-sm font-medium">Username</label>
-                    <input type="text" id="username" name="username" class="mt-1 p-2 w-full bg-gray-700 border-none rounded">
+                    <input type="text" id="username" name="username" required class="mt-1 p-2 w-full bg-gray-700 border-none rounded">
                 </div>
 
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-medium">Password</label>
-                    <input type="password" id="password" name="password" class="mt-1 p-2 w-full bg-gray-700 border-none rounded">
+                    <input type="password" id="password" name="password" required class="mt-1 p-2 w-full bg-gray-700 border-none rounded">
                 </div>
 
                 <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded focus:outline-none focus:shadow-outline-blue">
