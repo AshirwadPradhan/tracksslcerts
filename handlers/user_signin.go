@@ -40,9 +40,16 @@ func UserSignIn(db db.UserStorer) echo.HandlerFunc {
 				helpers.FormMessageHTMXResponse("error", "Login Failed"))
 		}
 
+		// We need to redirect here to /dashboard on successful verification
+		// Since we are using htmx, we need to set HX-Redirect header so that
+		// htmx can redirect to correct page on form successful submission
+		// We cannot user c.Redirect() as htmx only redirects on 2xx response
+		// and c.Redirect() expects 3xx response code.
+		// Therefore we will use htmx for redirect by setting HX-Redirect header
+		// and echo will return no-content
 		c.Response().Header().Set("HX-Redirect", "/dashboard")
 		c.Response().Header().Set("HX-Location", "/dashboard")
-		return c.Redirect(http.StatusOK, "/dashboard")
+		return c.NoContent(http.StatusOK)
 	}
 }
 
