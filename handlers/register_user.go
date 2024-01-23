@@ -11,7 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func RegisterUserHandler(db db.UserStorer) echo.HandlerFunc {
+func HandlePostCreateAccount(db db.UserStorer) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		username := c.FormValue("username")
 		email := c.FormValue("email")

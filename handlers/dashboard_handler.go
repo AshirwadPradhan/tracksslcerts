@@ -7,7 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func DashboardHandler(s db.DomainStorer) echo.HandlerFunc {
+func HandleGetDashboard(s db.DomainStorer) echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 		user, err := c.Cookie("ssl-cert-user")

@@ -10,7 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func UserSignIn(db db.UserStorer) echo.HandlerFunc {
+func HandlePostUserLogin(db db.UserStorer) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		username := c.FormValue("username")
 		password := c.FormValue("password")

@@ -51,6 +51,7 @@ func main() {
 	templates["create_account"] = template.Must(template.ParseFiles("./templates/base.html", "./templates/create_account.html"))
 	templates["dashboard"] = template.Must(template.ParseFiles("./templates/base.html", "./templates/dashboard.html"))
 	templates["user_login"] = template.Must(template.ParseFiles("./templates/base.html", "./templates/user_login.html"))
+	templates["add_domain"] = template.Must(template.ParseFiles("./templates/base.html", "./templates/add_domain.html"))
 
 	e.Renderer = &TemplateRegistry{
 		templates: templates,
@@ -65,12 +66,19 @@ func main() {
 		ErrorHandler: auth.JWTErrorChecker,
 	}))
 
-	e.GET("/", handlers.HomeHandler)
-	restrictedGroup.GET("/dashboard", handlers.DashboardHandler(s)).Name = "dashboard"
-	e.GET("/user-login", handlers.UserLoginHandler).Name = "userLoginForm"
-	e.POST("/user-login", handlers.UserSignIn(s))
-	e.GET("/register-user", handlers.CreateAccountHandler)
-	e.POST("/register-user", handlers.RegisterUserHandler(s))
+	e.GET("/", handlers.HandleGetHome)
+
+	// FIXME: user-login should automtically login into dashboard
+	// if user is already signed in
+	e.GET("/user-login", handlers.HandleGetUserLogin).Name = "userLoginForm"
+	e.POST("/user-login", handlers.HandlePostUserLogin(s))
+	e.GET("/register-user", handlers.HandleGetCreateAccount)
+	e.POST("/register-user", handlers.HandlePostCreateAccount(s))
+
+	restrictedGroup.GET("/dashboard", handlers.HandleGetDashboard(s)).Name = "dashboard"
+	// FIXME: not working even if user is signed in
+	restrictedGroup.GET("/add-domain", handlers.HandleGetAddDomain)
+	restrictedGroup.POST("/add-domain", handlers.HandlePostAddDomain)
 
 	e.Logger.Fatal(e.Start(":3000"))
 }

@@ -1,0 +1,24 @@
+{{ define "title" }}
+Add Domain
+{{ end }}
+
+{{ define "body" }}
+<body class="bg-gray-900 text-white dark">
+
+    <div class="container mx-auto p-4">
+
+        <h1 class="text-2xl font-bold mb-4">Add Domains</h1>
+
+        <!-- Add Domains Form -->
+        <form action="/add-domains" method="post">
+            <label for="domainList" class="block text-sm font-medium text-gray-400 mb-4">Domains:</label>
+            <textarea id="domainList" name="domainList" class="form-textarea w-full h-32 bg-gray-800 text-white resize-none" 
+            placeholder="Enter domains to start tracking. You can enter multiple domains to track seperated by comma(,)" required></textarea>
+
+            <button type="submit" class="mt-2 bg-blue-500 text-white py-2 px-4 rounded">Add Domains</button>
+        </form>
+
+    </div>
+
+</body>
+{{ end }}
